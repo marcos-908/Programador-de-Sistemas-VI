@@ -13,7 +13,6 @@ int farotial_duplo_impar(int a);
 int mdc(int a, int b);
 int mmc(int a, int b);
 void segundo_grau(double a, double b, double c);
-void sair();
 
 int main()
 {
@@ -22,17 +21,12 @@ int main()
 	double x = 0.0;
 	double y = 0.0;
 	double p = 0.0;
-	double delta = 0.0;
 	double r = 0.0;
-	double rk = 0.0;
 	double R1 = 0.0;
 	double R2 = 0.0;
 	int resposta = 1;
-	int resto = 0;
 	int m = 0;
 	int n = 0;
-	int copia_m = 0;
-	int copia_n = 0;
 	
 	do{
 		menu();
@@ -82,38 +76,45 @@ int main()
 			printf("escolha uma base e depois o expoente\n");
 			scanf("%lf", &x);
 	        scanf("%lf", &y);
-			if(y == 0)
+			if(y != 0)
 			{
 			resultado = potenciacao(x,y);
+			printf("o potenciacao fica: %lf\n", resultado);
 			}else
 			{
-				printf("todo numero elevato a 0 é 1!\n");
+				printf("todo numero elevato a 0 e: 1!\n");
 			}
 			break;
 			
 			case 6:
-			printf("escolha um número para descobrir a raiz quadrada\n");
-			scanf("&lf", &r);
-			resultado = raiz(r);
+			printf("escolha um numero para descobrir a raiz quadrada\n");
+			scanf("%lf", &r);
 			if(r >! 0)
 			{
+			resultado = raiz(r);
 			printf("o valor da raiz e: %lf\n", resultado);
 			}else
 			{
-				printf("não existe nos conjunto dos numeros reais\n");
+				printf("nao existe raizes para numeros de 0 ou numeros negativos\n");
 			}
 			break;
 			
 			case 7:
 			printf("escolha um numero para saber o fatorial simples\n");
-			scanf("&d", &m);
+			scanf("%d", &m);
 			resposta = fatorial_simples(m);
-			printf("o valor e: %d", resposta);
+			if(m >! 0)
+			{
+			printf("o valor e: %d\n", resposta);
+			}else
+			{
+				printf("nao existe fatorial de 0 ou numeros negativos!\n");
+			}
 			break;
 			
 			case 8:
 			printf("escolha um numero para saber o fatorial duplo\n");
-			scanf("%d", m);
+			scanf("%d", &m);
 			if(m>0)
 			{
 			if(m%2 == 0)
@@ -123,11 +124,11 @@ int main()
 			}else
 			{
 				resposta = farotial_duplo_impar(m);
-				printf("o valor e: &d\n", resposta);
+				printf("o valor e: %d\n", resposta);
 			}
 			}else
 			{
-				printf("não tem fatorial negativo\n");
+				printf("nao tem fatorial negativo\n");
 			}
 			break;
 			
@@ -136,7 +137,7 @@ int main()
 			scanf("%d", &m);
 			scanf("%d", &n);
 			resposta = mdc(m,n);
-			printf("o maximo divisor commum e: %d\n");
+			printf("o maximo divisor commum e: %d\n", resposta);
 			break;
 			
 			case 10:
@@ -144,6 +145,7 @@ int main()
 			scanf("%d", &m);
 			scanf("%d", &n);
 			resposta = mmc(m,n);
+			printf("o minimo multiplicador commum e: %d\n", resposta);
 			break;
 			
 			case 11:
@@ -157,18 +159,19 @@ int main()
 
 			}
 			else{
-				printf("não existe nos conjunto dos numeros reais\n");
+				printf("nao existe nos conjunto dos numeros reais\n");
 			}
 			break;
 			
 			case 12:
-			sair;
+			printf("saindo do programa...\n");
 			break;
 			
 			default:
 			printf("opcao inedisponivel\n");
+			break;
 		}
-	}while(operacao == 12);
+	}while(operacao != 12);
 	
 	return 0;
 }
@@ -176,6 +179,7 @@ int main()
 void menu()
 {
 	printf("BEM-VINDO A CALCULADORA!\n");
+	printf("ESCOLHA UMA OPERACAO\n");
 	printf("(1) somar\n");
 	printf("(2) subtrair\n");
 	printf("(3) multiplicar\n");
@@ -202,12 +206,12 @@ double subtracao(double a, double b)
 
 double multiplicacao(double a, double b)
 {
-	return(a*b);
+	return (a*b);
 }
 	
 double divisao(double a, double b)
 {
-	return(a/b);
+	return (a/b);
 }
 
 double potenciacao(double a, int b)
@@ -218,7 +222,7 @@ double potenciacao(double a, int b)
 		resultado = resultado*a;
 	}
 	
-	return(resultado);
+	return resultado;
 }
 
 double raiz(double a)
@@ -232,7 +236,7 @@ double raiz(double a)
 		rk = raiz;
 	}
 	
-	return(raiz);
+	return raiz;
 }
 
 int fatorial_simples(int a)
@@ -243,7 +247,7 @@ int fatorial_simples(int a)
 		resposta = resposta*i;
 	}
 	
-	return(resposta);
+	return resposta;
 }
 
 int farotial_duplo_par(int a)
@@ -254,7 +258,7 @@ int farotial_duplo_par(int a)
 		resposta = resposta*i;
 	}
 	
-	return(resposta);
+	return resposta;
 }
 
 int farotial_duplo_impar(int a)
@@ -265,12 +269,12 @@ int farotial_duplo_impar(int a)
 		resposta = resposta*i;
 	}
 	
-	return(resposta);
+	return resposta;
 }
 
 int mdc(int a, int b)
 {
-	int resto =0;
+	int resto = 0;
 		while(b != 0)
 	{
 		resto = a%b;
@@ -278,54 +282,34 @@ int mdc(int a, int b)
 		b = resto;
 	}
 	
-	return(a);
+	return a;
 }
 
 int mmc(int a, int b)
 
-{
-	int resposta;
-	int copia_m = a;
-	int copia_n = b;
-	int resto;
-	int m,n;
-	
-	while(b != 0)
-	{
-		resto = a%b;
-		a = b;
-		b = resto;
-	}
-	
-	resposta = (copia_m*copia_n)/m;
-	
-	return(resposta);
+{	
+	return(a*b)/mdc(a,b);
 }
 
 void segundo_grau(double a, double b, double c)
 {
-	double R1,R2, delta,raiz,rk;
+	double delta = 0.0;
+	double R1 = 0.0;
+	double R2 = 0.0;
+	double rk = 0.0;
+	
 	delta = (b*b) - (4*a*c);
-	if(delta>0 && a !=0)
+	
+	if(delta > 0 && a !=0)
 	{
-	rk = delta;
-	
-	for(int i=0; i < 1000; i++)
+		R1 = (-b+raiz(delta))/(2*a);
+		R2 = (-b-raiz(delta))/(2*a);
+		
+		printf("X1: %lf\n", R1);
+        printf("X2: %lf\n", R2);
+		
+	}else
 	{
-		raiz = 0.5*(rk+(delta/rk));
-		rk = raiz;
+		printf("nao existe raizes de 0 ou numeros negativo\n");
 	}
-	
-	R1 = (-b+raiz)/(2*a);
-	R2 = (-b-raiz)/(2*a);
-	
-				printf("R1 = %.5lf\n", R1);
-			printf("R2 = %.5lf\n", R2);
-	}
-	
-}
-
-void sair()
-{
-	printf("saindo do programa!\n");
 }
