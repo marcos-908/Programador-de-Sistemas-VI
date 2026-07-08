@@ -167,6 +167,10 @@ int main()
 			printf("saindo do programa...\n");
 			break;
 			
+			case 67:
+			printf("SIX SEVEN!!!!!!!!!!!\n");
+			break;
+			
 			default:
 			printf("opcao inedisponivel\n");
 			break;
