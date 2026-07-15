@@ -7,9 +7,10 @@ void criarpersonagem(char nome[], int *vida, int *vidamax, int *ataque, int *def
 void mostrarstatus(char nomeex[], int vida, int vidamax, int ataque, int defesa, int nivel, int experiencia, int ouro);
 void explorarmapa(int *vida, int ataque, int defesa, int *experiencia, int *ouro);
 void subirnivel(int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia);
-void macaco(int *experiencia);
+void macaco(int *experiencia, int *ouro);
 void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinimigo, int *experiencia, int *ouro, int *venceu);
 void loja(int *ouro);
+void inventario(int *vida, int *ataque, int *defesa);
 
 int main()
 {
@@ -26,17 +27,17 @@ int main()
 	
 	srand(time(NULL));
 	
-	printf(" O reino de C-Nai esta sendo atacado por monstros das trevas!\n O Rei Jhonson escolheu voce para ajudar o reino!\n         VOCE ESTA PREPARADO?\n\n");
+	printf(" O ceu sobre o reino de C-Nai escureceu de vez. Monstros de sombrios invadiram as muralhas do sul e avancam sem piedade.\n No salao do trono, o Rei Jhonson - desarmado e desesperado - implora diretamente pela sua ajuda:Nossos portoes cairam e nao nos resta mais nada. Por favor, voce e a nossa ultima esperanca!\n         VOCE ESTA PREPARADO?\n\n");
 	printf("1 - SIM!\n");
 	printf("2 - NAO!\n\n");
 	scanf("%d", &opcao);
 	
 	if(opcao == 2)
 	{
-		printf("\nEntendo voce enfrentar as trevas sozinho e perigoso!\n");
+		printf("\n Voce da as costas ao desespero do Rei. Sem a sua ajuda, as sombras engolem o trono e o reino de C-Nai cai em ruinas para sempre.\n Voce escolheu a covardia.\n==============\n  GAME OVER!\n==============\n");
 	}else if(opcao == 1)
 	{
-		printf("\nO jogo vai comecar!\n O OBJETIVO FINAL e acabar com o dragao sombrio");
+		printf("\n O Rei Jhonson recupera o folego e aponta para as portas que tremem: Que os deuses o guiem! Sua missao final e destruir o Dragao Sombrio, a origem de todo este mal!\n Voce saca sua arma e se prepara para o pior. A batalha comeca agora!");
 		
 	do{
 		menu();
@@ -56,15 +57,24 @@ int main()
 			break;
 			
 			case 4:
+			loja(&ouro);
+			break;
 			
+			case 5:
+			inventario(&vida, &ataque, &defesa);
+			break;
 			
 			case 67:
-			macaco(&experiencia);
+			macaco(&experiencia, &ouro);
 			subirnivel(&vida, &vidamax, &ataque, &defesa, &nivel, &experiencia);
 			break;
 			
 			case 0:
 			printf("saindo do jogo...\n");
+			break;
+			
+			default:
+			printf("Voce nao escolheu nada");
 		}
 	}while(escolha != 0);
 	}
@@ -243,9 +253,10 @@ void subirnivel(int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, i
 	}
 }
 
-void macaco(int *experiencia)
+void macaco(int *experiencia, int*ouro)
 {
 	*experiencia += 10;
+	*ouro += 10;
 }
 
 void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinimigo, int *experiencia, int *ouro, int *venceu)
@@ -349,5 +360,138 @@ void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinim
 
 void loja(int *ouro)
 {
+	int opcao = 0;
+	int pocao_pequena = 50;
+	int pocao_grande = 100;
+	int espada = 500;
+	int armadura = 650;
+	int escudo = 300;
 	
+	do{
+		
+		printf("         _\\/_          \n");
+		printf("       .-\"   \"-.        \n");
+		printf("      / .---. \\        \n");
+		printf("     | /     \\ |       \n");
+		printf("     | | o o | |\n");
+		printf("     \\ \\  -  / /       \n");
+		printf("      \\ `---' /        \n");
+		printf("      /`-----'\\        \n");
+		printf("     / |  $  | \\       \n");
+		printf("    /  |_____|  \\      \n");
+		printf("   /_____________\\     \n");
+		printf("   |             |     \n");
+		printf("   |=== BALCAO ==|     \n");
+		printf("   |_____________|     \n");
+		printf("VENDEDOR: \"Bem-vindo, viajante! O que vai querer?\"\n");
+		printf("\n\n=====================\n");
+		printf("       LOJA          \n");
+		printf("=====================\n");
+		printf("1 - Pocao Pequena | 50\n");
+		printf("2 - Pocao Grande  | 100\n");
+		printf("3 - Espada        | 500\n");
+		printf("4 - Armadura      | 650\n");
+		printf("5 - Escudo        | 300\n");
+		printf("0 - Voltar\n");
+		printf("Sua Escolha:\n");
+	
+		scanf("%d", &opcao);
+		
+		switch(opcao)
+		{
+			case 1:
+			if(*ouro >= pocao_pequena)
+			{
+				printf("Voce comprou uma pocao pequena\n");
+				*ouro -= pocao_pequena;
+				printf("Ouro restante = %d\n", *ouro);
+			}else
+			{
+				printf("Voce nao tem moedas de ouro sufciente!\n");
+			}
+			break;
+			
+			case 2:
+			if(*ouro >= pocao_grande)
+			{
+				printf("Voce comprou uma pocao grande\n");
+				*ouro -= pocao_grande;
+				printf("Ouro restante = %d\n", *ouro);
+			}else
+			{
+				printf("Voce nao tem moedas de ouro sufciente!\n");
+			}
+			break;
+			
+			case 3:
+			if(*ouro >= espada)
+			{
+				printf("Voce comprou uma espada!\n");
+				*ouro -= espada;
+				printf("Ouro restante = %d\n", *ouro);
+			}else
+			{
+				printf("Voce nao tem moedas de ouro sufciente!\n");
+			}
+			break;
+			
+			case 4:
+			if(*ouro >= armadura)
+			{
+				printf("Voce comprou uma armadura\n");
+				*ouro -= armadura;
+				printf("Ouro restante = %d\n\n", *ouro);
+			}else
+			{
+				printf("Voce nao tem moedas de ouro sufciente!\n");
+			}
+			break;
+			
+			case 5:
+			if(*ouro >= escudo)
+			{
+				printf("Voce comprou um escudo\n");
+				*ouro -= escudo;
+				printf("Ouro restante = %d\n", *ouro);
+			}else
+			{
+				printf("Voce nao tem moedas de ouro sufciente!\n");
+			}
+			break;
+			
+			case 0:
+			printf("Voce saiu da loja\n");
+			break;
+			
+			default:
+			printf("Voce nao escolheu nenhuma opcao disponivel\n");
+			break;
+		}
+	}while(opcao != 0);
+}
+
+void inventario(int *vida, int *ataque, int *defesa)
+{
+	int opcao = 0;
+	
+	do
+	{
+		
+		printf("\n\n===================\n");
+		printf("    INVENTARIO\n");
+		printf("===================\n");
+		printf("\n1 - Vizualizar Itens\n");
+		printf("2 - Usar Item\n");
+		printf("3 - Descatar Item\n");
+		printf("0 - Voltar\n");
+		printf("Sua Escolha:\n");
+		
+		scanf("%d", &opcao);
+		
+		switch(opcao)
+		{
+			case 1:
+			
+		}
+	}while(opcao != 0);
 }
