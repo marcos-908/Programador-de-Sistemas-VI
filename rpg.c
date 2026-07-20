@@ -3,7 +3,7 @@
 #include<time.h>
 
 void menu();
-void criarpersonagem(char nome[], int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia, int *ouro);
+void criarpersonagem(char nome[], int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia, int *ouro, int *criado);
 void mostrarstatus(char nomeex[], int vida, int vidamax, int ataque, int defesa, int nivel, int experiencia, int ouro);
 void explorarmapa(int *vida, int ataque, int defesa, int *experiencia, int *ouro, int *pocao_pequena, int *pocao_grande);
 void subirnivel(int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia);
@@ -11,7 +11,8 @@ void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinim
 void loja(int *ouro, int *pocao_pequena, int *pocao_grande, int *espada, int *armadura, int *escudo);
 void inventario(int *vida, int *vidamax, int *ataque, int *defesa, int *pocao_pequena, int *pocao_grande, int *espada, int *armadura, int *escudo);
 void descansar(int *vida, int *vidamax);
-void chefefinal(int *vida, int *vidamax, int *ataque, int *defesa, int *experiencia, int *ouro, int *nivel);
+void chefefinal(int *vida, int *vidamax, int *ataque, int *defesa, int *experiencia, int *ouro, int *nivel, int *arroz);
+void chefefinal2(int *vida, int *vidamax, int *ataque, int *defesa, int *experiencia, int *ouro, int *nivel, int *arroz2);
 
 int main()
 {
@@ -30,6 +31,9 @@ int main()
 	int espada = 0;
 	int armadura = 0;
 	int escudo = 0;
+	int criado = 0;
+	int arroz = 0;
+	int arroz2 = 0;
 	
 	srand(time(NULL));
 	
@@ -45,48 +49,96 @@ int main()
 	{
 		printf("\n O Rei Jhonson recupera o folego e aponta para as portas que tremem: Que os deuses o guiem! Sua missao final e destruir o Dragao Sombrio, a origem de todo este mal!\n Voce saca sua arma e se prepara para o pior. A batalha comeca agora!");
 		
-	do{
-		menu();
-		scanf("%d", &escolha);
-		switch(escolha)
-		{
-			case 1:
-			criarpersonagem(nome, &vida, &vidamax, &ataque, &defesa, &nivel, &experiencia, &ouro);
-			break;
-			
-			case 2:
-			mostrarstatus(nome, vida, vidamax, ataque, defesa, nivel, experiencia, ouro);
-			break;
-			
-			case 3:
-			explorarmapa(&vida, ataque, defesa, &experiencia, &ouro, &pocao_pequena, &pocao_grande);
-			subirnivel(&vida, &vidamax, &ataque, &defesa, &nivel, &experiencia);
-			break;
-			
-			case 4:
-			loja(&ouro, &pocao_pequena, &pocao_grande, &espada, &armadura, &escudo);
-			break;
-			
-			case 5:
-			inventario(&vida, &vidamax, &ataque, &defesa, &pocao_pequena, &pocao_grande, &espada, &armadura, &escudo);
-			break;
-			
-			case 6:
-			descansar(&vida, &vidamax);
-			break;
-			
-			case 7:
-			chefefinal(&vida, &vidamax, &ataque, &defesa, &experiencia, &ouro, &nivel);
-			break;
-			
-			case 0:
-			printf("saindo do jogo...\n");
-			break;
-			
-			default:
-			printf("Voce nao escolheu nada");
-		}
-	}while(escolha != 0);
+		do{
+			menu();
+			scanf("%d", &escolha);
+			switch(escolha)
+			{
+				case 1:
+				criarpersonagem(nome, &vida, &vidamax, &ataque, &defesa, &nivel, &experiencia, &ouro, &criado);
+				break;
+				
+				case 2:
+				if(criado == 1)
+				{
+					mostrarstatus(nome, vida, vidamax, ataque, defesa, nivel, experiencia, ouro);
+				}else if(criado == 0)
+				{
+					printf("Voce nao tem um personagem!\n");
+				}
+				break;
+				
+				case 3:
+				if(criado == 1)
+				{
+					explorarmapa(&vida, ataque, defesa, &experiencia, &ouro, &pocao_pequena, &pocao_grande);
+					subirnivel(&vida, &vidamax, &ataque, &defesa, &nivel, &experiencia);
+				}else if(criado == 0)
+				{
+					printf("Voce nao tem um personagem!\n");
+				}
+				break;
+				
+				case 4:
+				if(criado == 1)
+				{
+					loja(&ouro, &pocao_pequena, &pocao_grande, &espada, &armadura, &escudo);
+				}else if(criado == 0)
+				{
+					printf("Voce nao tem um personagem!\n");
+				}
+				break;
+				
+				case 5:
+				if(criado == 1)
+				{
+					inventario(&vida, &vidamax, &ataque, &defesa, &pocao_pequena, &pocao_grande, &espada, &armadura, &escudo);
+				}else if(criado == 0)
+				{
+					printf("Voce nao tem um personagem!\n");
+				}
+				break;
+				
+				case 6:
+				if(criado == 1)
+				{
+					descansar(&vida, &vidamax);
+				}else if(criado == 0)
+				{
+					printf("Voce nao tem um personagem!\n");
+				}
+				break;
+				
+				case 7:
+				if(criado == 1)
+				{
+					if(arroz == 0)
+					{
+						chefefinal(&vida, &vidamax, &ataque, &defesa, &experiencia, &ouro, &nivel, &arroz);
+						subirnivel(&vida, &vidamax, &ataque, &defesa, &nivel, &experiencia);
+					}else if(arroz == 1)
+					{
+						printf("Ele ja esta morto!\n");
+					}
+				}else if(criado == 0)
+				{
+					printf("Voce nao tem um personagem!\n");
+				}
+				break;
+				
+				case 666:
+				chefefinal2(&vida, &vidamax, &ataque, &defesa, &experiencia, &ouro, &nivel, &arroz2);
+				subirnivel(&vida, &vidamax, &ataque, &defesa, &nivel, &experiencia);
+				break;
+				
+				case 0:
+				printf("saindo do jogo...\n");
+				break;
+				
+				default:
+				printf("Voce nao escolheu nada");
+			}
+		}while(escolha != 0);
 	}
 	system("pause");
 	return(0);
@@ -106,23 +158,31 @@ void menu()
 	printf("5 - Inventario\n");
 	printf("6 - Descansar\n");
 	printf("7 - Enfrentar Chefe Final\n");
+	printf("666 - PERIGO!!!!\n");
 	printf("0 - Sair\n");
 	printf("\n");
 	printf("Escolha:\n");
 }
 
-void criarpersonagem(char nome[], int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia, int *ouro)
+void criarpersonagem(char nome[], int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia, int *ouro, int *criado)
 {
-	printf("\nescolha um nome para o personagem\n");
-	scanf("%s", nome);
-	*vida = 100;
-	*vidamax = 100;
-	*ataque = 10;
-	*defesa = 5;
-	*nivel = 1;
-	*experiencia = 0;
-	*ouro = 50;
-	printf("personagem criado com sucesso!\n");
+	if(*criado == 0)
+	{
+		printf("\nescolha um nome para o personagem\n");
+		scanf("%s", nome);
+		*vida = 100;
+		*vidamax = 100;
+		*ataque = 10;
+		*defesa = 5;
+		*nivel = 1;
+		*experiencia = 0;
+		*ouro = 50;
+		printf("personagem criado com sucesso!\n");
+		*criado = 1;
+	}else if(*criado == 1)
+	{
+		printf("Voce ja tem um personagem criado!\n");
+	}
 }
 
 void mostrarstatus(char nomeex[], int vida, int vidamax, int ataque, int defesa, int nivel, int experiencia, int ouro)
@@ -262,7 +322,7 @@ void subirnivel(int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, i
 		*defesa = *defesa + 3;
 		*experiencia -= 100;
 		
-		printf("Parabens vc conseguiu subir de nivel!");
+		printf("Parabens vc conseguiu subir de nivel!\n");
 	}
 }
 
@@ -853,13 +913,13 @@ void descansar(int *vida, int *vidamax)
 	}
 }
 
-void chefefinal(int *vida, int *vidamax, int *ataque, int *defesa, int *experiencia, int *ouro, int *nivel)
+void chefefinal(int *vida, int *vidamax, int *ataque, int *defesa, int *experiencia, int *ouro, int *nivel,int *arroz)
 {
 	int vidainimigo = 300;
 	int ataqueinimigo = 25;
 	int venceu = 0;
 	
-	if(*nivel <= 5)
+	if(*nivel <= 5 && *nivel != 5)
 	{
 		printf("Voce ainda nao esta preparado!\n");
 	}else if(*nivel >= 5)
@@ -868,13 +928,37 @@ void chefefinal(int *vida, int *vidamax, int *ataque, int *defesa, int *experien
 		combate(vida, *ataque, *defesa, &vidainimigo, ataqueinimigo, experiencia, ouro, &venceu);
 		if(venceu == 1 && *vida >= 0)
 		{
-			*ouro += 1000000;
-			*experiencia += 1000000;
-			printf("+1000000 de ouro!\n");
-			printf("+1000000 de XP!\n");
-			printf("PARABENS VOCE GANHOU O JOGO!\n");
-			system("pause");
-			exit(0);
+			*ouro += 1000;
+			*experiencia += 1000;
+			printf("+1000 de ouro!\n");
+			printf("+1000 de XP!\n");
+			printf("PARABENS VOCE MATOU O DRAGAO!\n");
+			*arroz = 1;
+		}
+	}
+}
+
+void chefefinal2(int *vida, int *vidamax, int *ataque, int *defesa, int *experiencia, int *ouro, int *nivel, int *arroz2)
+{
+	int vidainimigo = 3000;
+	int ataqueinimigo = 250;
+	int venceu = 0;
+	
+	if(*nivel <= 30 && *nivel != 30)
+	{
+		printf("Voce nao e forte o sufciente!\n");
+	}else if(*nivel >= 30)
+	{
+		printf("VOCE ENCONTROU UM OUTRO BOSS!\n E UM CACHORRO ENORME QUE DESTROI PAISES!\n O NOME DELE E: DEVORADOR DE PAISES\n");
+		combate(vida, *ataque, *defesa, &vidainimigo, ataqueinimigo, experiencia, ouro, &venceu);
+		if(venceu == 1 && *vida >= 0)
+		{
+			*ouro += 100000;
+			*experiencia += 100000;
+			printf("+100000 de ouro!\n");
+			printf("+100000 de XP!\n");
+			printf("PARABENS VOCE MATOU O DEVORADOR DE PAISES!\n");
+			*arroz2 = 1;
 		}
 	}
 }
