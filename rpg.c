@@ -5,12 +5,13 @@
 void menu();
 void criarpersonagem(char nome[], int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia, int *ouro);
 void mostrarstatus(char nomeex[], int vida, int vidamax, int ataque, int defesa, int nivel, int experiencia, int ouro);
-void explorarmapa(int *vida, int ataque, int defesa, int *experiencia, int *ouro);
+void explorarmapa(int *vida, int ataque, int defesa, int *experiencia, int *ouro, int *pocao_pequena, int *pocao_grande);
 void subirnivel(int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia);
-void macaco(int *experiencia, int *ouro);
 void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinimigo, int *experiencia, int *ouro, int *venceu);
-void loja(int *ouro);
-void inventario(int *vida, int *ataque, int *defesa);
+void loja(int *ouro, int *pocao_pequena, int *pocao_grande, int *espada, int *armadura, int *escudo);
+void inventario(int *vida, int *vidamax, int *ataque, int *defesa, int *pocao_pequena, int *pocao_grande, int *espada, int *armadura, int *escudo);
+void descansar(int *vida, int *vidamax);
+void chefefinal(int *vida, int *vidamax, int *ataque, int *defesa, int *experiencia, int *ouro, int *nivel);
 
 int main()
 {
@@ -24,6 +25,11 @@ int main()
 	int nivel = 0;
 	int experiencia = 0;
 	int ouro = 0;
+	int pocao_pequena = 0;
+	int pocao_grande = 0;
+	int espada = 0;
+	int armadura = 0;
+	int escudo = 0;
 	
 	srand(time(NULL));
 	
@@ -53,20 +59,24 @@ int main()
 			break;
 			
 			case 3:
-			explorarmapa(&vida, ataque, defesa, &experiencia, &ouro);
+			explorarmapa(&vida, ataque, defesa, &experiencia, &ouro, &pocao_pequena, &pocao_grande);
+			subirnivel(&vida, &vidamax, &ataque, &defesa, &nivel, &experiencia);
 			break;
 			
 			case 4:
-			loja(&ouro);
+			loja(&ouro, &pocao_pequena, &pocao_grande, &espada, &armadura, &escudo);
 			break;
 			
 			case 5:
-			inventario(&vida, &ataque, &defesa);
+			inventario(&vida, &vidamax, &ataque, &defesa, &pocao_pequena, &pocao_grande, &espada, &armadura, &escudo);
 			break;
 			
-			case 67:
-			macaco(&experiencia, &ouro);
-			subirnivel(&vida, &vidamax, &ataque, &defesa, &nivel, &experiencia);
+			case 6:
+			descansar(&vida, &vidamax);
+			break;
+			
+			case 7:
+			chefefinal(&vida, &vidamax, &ataque, &defesa, &experiencia, &ouro, &nivel);
 			break;
 			
 			case 0:
@@ -78,7 +88,7 @@ int main()
 		}
 	}while(escolha != 0);
 	}
-		
+	system("pause");
 	return(0);
 }
 
@@ -130,7 +140,7 @@ void mostrarstatus(char nomeex[], int vida, int vidamax, int ataque, int defesa,
 	
 }
 
-void explorarmapa(int *vida, int ataque, int defesa, int *experiencia, int *ouro)
+void explorarmapa(int *vida, int ataque, int defesa, int *experiencia, int *ouro, int *pocao_pequena, int *pocao_grande)
 {
 	int vidainimigo = 0;
 	int ataqueinimigo = 0;
@@ -213,9 +223,11 @@ void explorarmapa(int *vida, int ataque, int defesa, int *experiencia, int *ouro
 		if(sorteiopocao == 1)
 		{
 			printf("Era uma pocao pequena!\n");
+			*pocao_pequena += 1;
 		}else if(sorteiopocao == 2)
 		{
 			printf("Era uma pocao grande!\n");
+			*pocao_grande += 1;
 		}
 	}else if(sorteio == 4)
 	{
@@ -227,6 +239,7 @@ void explorarmapa(int *vida, int ataque, int defesa, int *experiencia, int *ouro
 			printf("  GAME OVER!\n");
 			printf("==============\n");
 			printf("Voce morreu!\n");
+			system("pause");
 			exit(0);
 		}else
 		{
@@ -240,23 +253,17 @@ void explorarmapa(int *vida, int ataque, int defesa, int *experiencia, int *ouro
 
 void subirnivel(int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia)
 {
-	if(*experiencia >= 100)
+	while(*experiencia >= 100)
 	{
 		*nivel += 1;
 		*vidamax = *vidamax + 20;
 		*vida = *vidamax;
 		*ataque = *ataque + 5;
 		*defesa = *defesa + 3;
-		*experiencia = 0;
+		*experiencia -= 100;
 		
 		printf("Parabens vc conseguiu subir de nivel!");
 	}
-}
-
-void macaco(int *experiencia, int*ouro)
-{
-	*experiencia += 10;
-	*ouro += 10;
 }
 
 void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinimigo, int *experiencia, int *ouro, int *venceu)
@@ -298,6 +305,7 @@ void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinim
 					printf("  GAME OVER!\n");
 					printf("==============\n");
 					printf("Voce morreu!\n");
+					system("pause");
 					exit(0);
 				}else
 				{
@@ -307,7 +315,11 @@ void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinim
 			break;
 			
 			case 2:
-			danorecebido =  ataqueinimigo / 2;
+			danorecebido =  ataqueinimigo - defesa;
+			if(danorecebido < 0)
+			{
+				danorecebido = 0;
+			}
 			*vida -= danorecebido;
 			if(*vida <= 0)
 				{
@@ -315,9 +327,11 @@ void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinim
 					printf("  GAME OVER!\n");
 					printf("==============\n");
 					printf("Voce morreu!\n");
+					system("pause");
 					exit(0);
 				}else
 				{
+					printf("Voce defendeu o ataque!");
 					printf("Voce recebeu %d de dano\n", danorecebido);
 				}
 			break;
@@ -335,6 +349,7 @@ void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinim
 					printf("  GAME OVER!\n");
 					printf("==============\n");
 					printf("Voce morreu!\n");
+					system("pause");
 					exit(0);
 				}else
 				{
@@ -358,14 +373,14 @@ void combate(int *vida, int ataque, int defesa, int *vidainimigo, int ataqueinim
 	}
 }
 
-void loja(int *ouro)
+void loja(int *ouro, int *pocao_pequena, int *pocao_grande, int *espada, int *armadura, int *escudo)
 {
 	int opcao = 0;
-	int pocao_pequena = 50;
-	int pocao_grande = 100;
-	int espada = 500;
-	int armadura = 650;
-	int escudo = 300;
+	int preco_pocao_pequena = 50;
+	int preco_pocao_grande = 100;
+	int preco_espada = 500;
+	int preco_armadura = 650;
+	int preco_escudo = 300;
 	
 	do{
 		
@@ -400,10 +415,11 @@ void loja(int *ouro)
 		switch(opcao)
 		{
 			case 1:
-			if(*ouro >= pocao_pequena)
+			if(*ouro >= preco_pocao_pequena)
 			{
-				printf("Voce comprou uma pocao pequena\n");
-				*ouro -= pocao_pequena;
+				printf("Voce comprou uma pocao pequena!\n");
+				*ouro -= preco_pocao_pequena;
+				*pocao_pequena += 1;
 				printf("Ouro restante = %d\n", *ouro);
 			}else
 			{
@@ -412,10 +428,11 @@ void loja(int *ouro)
 			break;
 			
 			case 2:
-			if(*ouro >= pocao_grande)
+			if(*ouro >= preco_pocao_grande)
 			{
 				printf("Voce comprou uma pocao grande\n");
-				*ouro -= pocao_grande;
+				*ouro -= preco_pocao_grande;
+				*pocao_grande += 1;
 				printf("Ouro restante = %d\n", *ouro);
 			}else
 			{
@@ -424,38 +441,59 @@ void loja(int *ouro)
 			break;
 			
 			case 3:
-			if(*ouro >= espada)
+			if(*espada == 0)
 			{
-				printf("Voce comprou uma espada!\n");
-				*ouro -= espada;
-				printf("Ouro restante = %d\n", *ouro);
+				if(*ouro >= preco_espada)
+				{
+					printf("Voce comprou uma espada!\n");
+					*ouro -= preco_espada;
+					*espada = 1;
+					printf("Ouro restante = %d\n", *ouro);
+				}else
+				{
+					printf("Voce nao tem moedas de ouro sufciente!\n");
+				}
 			}else
 			{
-				printf("Voce nao tem moedas de ouro sufciente!\n");
+				printf("Voce ja tem uma espada!\n");
 			}
 			break;
 			
 			case 4:
-			if(*ouro >= armadura)
+			if(*armadura == 0)
 			{
-				printf("Voce comprou uma armadura\n");
-				*ouro -= armadura;
-				printf("Ouro restante = %d\n\n", *ouro);
+				if(*ouro >= preco_armadura)
+				{
+					printf("Voce comprou uma armadura\n");
+					*ouro -= preco_armadura;
+					*armadura = 1;
+					printf("Ouro restante = %d\n\n", *ouro);
+				}else
+				{
+					printf("Voce nao tem moedas de ouro sufciente!\n");
+				}
 			}else
 			{
-				printf("Voce nao tem moedas de ouro sufciente!\n");
+				printf("Voce ja tem uma armadura!\n");
 			}
 			break;
 			
 			case 5:
-			if(*ouro >= escudo)
+			if(*escudo == 0)
 			{
-				printf("Voce comprou um escudo\n");
-				*ouro -= escudo;
-				printf("Ouro restante = %d\n", *ouro);
+				if(*ouro >= preco_escudo)
+				{
+					printf("Voce comprou um escudo\n");
+					*ouro -= preco_escudo;
+					*escudo = 1;
+					printf("Ouro restante = %d\n", *ouro);
+				}else
+				{
+					printf("Voce nao tem moedas de ouro sufciente!\n");
+				}
 			}else
 			{
-				printf("Voce nao tem moedas de ouro sufciente!\n");
+				printf("Voce ja tem um escudo!\n");
 			}
 			break;
 			
@@ -470,13 +508,13 @@ void loja(int *ouro)
 	}while(opcao != 0);
 }
 
-void inventario(int *vida, int *ataque, int *defesa)
+void inventario(int *vida, int *vidamax, int *ataque, int *defesa, int *pocao_pequena, int *pocao_grande, int *espada, int *armadura, int *escudo)
 {
 	int opcao = 0;
+	int opcao_2 = 0;
 	
 	do
 	{
-		
 		printf("\n\n===================\n");
 		printf("    INVENTARIO\n");
 		printf("===================\n");
@@ -491,7 +529,352 @@ void inventario(int *vida, int *ataque, int *defesa)
 		switch(opcao)
 		{
 			case 1:
+			do{
+				if(*pocao_pequena >= 1)
+				{
+					printf("1 - Pocao Pequena | %d\n", *pocao_pequena);
+				}else
+				{
+					printf("1 - Pocao Pequena | Nao tem!\n");
+				}
+				if(*pocao_grande >= 1)
+				{
+					printf("2 - Pocao Grande  | %d\n", *pocao_grande);
+				}else
+				{
+					printf("2 - Pocao Grande  | Nao tem!\n");
+				}
+				if(*espada == 1)
+				{
+					printf("3 - Espada        | Nao equipada\n");
+				}else if(*espada == 2)
+				{
+					printf("3 - Espada        | Equipada\n");
+				}else
+				{
+					printf("3 - Espada        | Nao tem!\n");
+				}
+				if(*armadura == 1)
+				{
+					printf("4 - Armadura      | Nao equipada\n");
+				}else if(*armadura == 2)
+				{
+					printf("4 - Armadura      | Equipada\n");
+				}else
+				{
+					printf("4 - Armadura      | Nap tem!\n");
+				}
+				if(*escudo == 1)
+				{
+					printf("5 - Escudo        | Nao equipada\n");
+				}else if(*escudo == 2)
+				{
+					printf("5 - Escudo        | Equipada\n");
+				}else
+				{
+					printf("5 - Escudo        | Nao tem\n");
+				}
+				printf("0 - Voltar\n");
+				scanf("%d", &opcao_2);
+			}while(opcao_2 != 0);
+			break;
 			
+			case 2:
+			do{
+				if(*pocao_pequena >= 1)
+				{
+					printf("1 - Pocao Pequena | %d\n", *pocao_pequena);
+				}else
+				{
+					printf("1 - Pocao Pequena | Nao tem!\n");
+				}
+				if(*pocao_grande >= 1)
+				{
+					printf("2 - Pocao Grande  | %d\n", *pocao_grande);
+				}else
+				{
+					printf("2 - Pocao Grande  | Nao tem!\n");
+				}
+				if(*espada == 1)
+				{
+					printf("3 - Espada        | Nao equipada\n");
+				}else if(*espada == 2)
+				{
+					printf("3 - Espada        | Equipada\n");
+				}else
+				{
+					printf("3 - Espada        | Nao tem!\n");
+				}
+				if(*armadura == 1)
+				{
+					printf("4 - Armadura      | Nao equipada\n");
+				}else if(*armadura == 2)
+				{
+					printf("4 - Armadura      | Equipada\n");
+				}else
+				{
+					printf("4 - Armadura      | Nap tem!\n");
+				}
+				if(*escudo == 1)
+				{
+					printf("5 - Escudo        | Nao equipada\n");
+				}else if(*escudo == 2)
+				{
+					printf("5 - Escudo        | Equipada\n");
+				}else
+				{
+					printf("5 - Escudo        | Nao tem\n");
+				}
+				printf("0 - Voltar\n");
+				printf("Sua Escolha:\n");
+				scanf("%d", &opcao_2);
+				
+				switch(opcao_2)
+				{
+					case 1:
+					if(*pocao_pequena >= 1)
+					{
+						*vida += 20;
+						
+						if(*vida >= *vidamax)
+						{
+							*vida = *vidamax;
+						}
+						
+						printf("Voce recuperou vida!\n");
+						*pocao_pequena -= 1;
+					}else
+					{
+						printf("Voce nao tem pocao pequena!\n");
+					}
+					break;
+					
+					case 2:
+					if(*pocao_grande >= 1)
+					{
+						*vida += 50;
+						
+						if(*vida >= *vidamax)
+						{
+							*vida = *vidamax;
+						}
+						
+						printf("Voce recuperou vida!\n");
+						*pocao_grande -= 1;
+					}else
+					{
+						printf("Voce nao tem pocao grande!\n");
+					}
+					break;
+					
+					case 3:
+					if(*espada == 1)
+					{
+						*ataque += 5;
+						*espada = 2;
+					}else if(*espada == 2)
+					{
+						printf("A espada ja esta equipada\n");
+					}else
+					{
+						printf("Voce nao possui a espada!\n");
+					}
+					break;
+					
+					case 4:
+					if(*armadura == 1)
+					{
+						*defesa += 5;
+						*armadura = 2;
+					}else if(*armadura == 2)
+					{
+						printf("A armadura ja esta equipada\n");
+					}else
+					{
+						printf("Voce nao possui a armadura!\n");
+					}
+					break;
+					
+					case 5:
+					if(*escudo == 1)
+					{
+						*defesa += 3;
+						*escudo = 2;
+					}else if(*escudo == 2)
+					{
+						printf("O escudo ja esta esquipado\n");
+					}else
+					{
+						printf("Voce nao possui o escudo!\n");
+					}
+					break;
+				}
+				
+			}while(opcao_2 != 0);
+			break;
+			
+			case 3:
+			do
+			{
+				if(*pocao_pequena >= 1)
+				{
+					printf("1 - Pocao Pequena | %d\n", *pocao_pequena);
+				}else
+				{
+					printf("1 - Pocao Pequena | Nao tem!\n");
+				}
+				if(*pocao_grande >= 1)
+				{
+					printf("2 - Pocao Grande  | %d\n", *pocao_grande);
+				}else
+				{
+					printf("2 - Pocao Grande  | Nao tem!\n");
+				}
+				if(*espada == 1)
+				{
+					printf("3 - Espada        | Nao equipada\n");
+				}else if(*espada == 2)
+				{
+					printf("3 - Espada        | Equipada\n");
+				}else
+				{
+					printf("3 - Espada        | Nao tem!\n");
+				}
+				if(*armadura == 1)
+				{
+					printf("4 - Armadura      | Nao equipada\n");
+				}else if(*armadura == 2)
+				{
+					printf("4 - Armadura      | Equipada\n");
+				}else
+				{
+					printf("4 - Armadura      | Nap tem!\n");
+				}
+				if(*escudo == 1)
+				{
+					printf("5 - Escudo        | Nao equipada\n");
+				}else if(*escudo == 2)
+				{
+					printf("5 - Escudo        | Equipada\n");
+				}else
+				{
+					printf("5 - Escudo        | Nao tem\n");
+				}
+				printf("0 - Voltar\n");
+				printf("Sua escolha:\n");
+				scanf("%d", &opcao_2);
+				
+				switch(opcao_2)
+				{
+					case 1:
+					if(*pocao_pequena >= 1)
+					{
+						*pocao_pequena -= 1;
+						printf("Voce descartou uma pocao pequena!\n");
+					}else
+					{
+						printf("Nao tem pocao pequena para descartar!\n");
+					}
+					break;
+					
+					case 2:
+					if(*pocao_grande >= 1)
+					{
+						*pocao_grande -= 1;
+					}else
+					{
+						printf("Nao tem pocao grande para descartar!\n");
+					}
+					break;
+					
+					case 3:
+					if(*espada == 0)
+					{
+						printf("Sem espada para descartar!\n");
+					}else if(*espada == 1)
+					{
+						*espada = 0;
+						printf("Voce descartou a espada!\n");
+					}else if(*espada == 2)
+					{
+						*ataque -= 5;
+						*espada = 0;
+						printf("Voce descartou a espada!\n");
+					}
+					break;
+					
+					case 4:
+					if(*armadura == 0)
+					{
+						printf("Sem armadura para descartar!\n");
+					}else if(*armadura == 1)
+					{
+						*armadura = 0;
+						printf("Voce descartou a armadura!\n");
+					}else if(*armadura == 2)
+					{
+						*defesa -= 5;
+						*armadura = 0;
+						printf("Voce descartou a armadura!\n");
+					}
+					break;
+					
+					case 5:
+					if(*escudo == 0)
+					{
+						printf("Sem escudo para descartar!\n");
+					}else if(*escudo == 1)
+					{
+						*escudo = 0;
+						printf("Voce descartou o escudo!\n");
+					}else if(*escudo ==2)
+					{
+						*defesa -= 3;
+						*escudo = 0;
+						printf("Voce descartou o escudo!\n");
+					}
+					break;
+				}
+			}while (opcao_2 != 0);
 		}
 	}while(opcao != 0);
+}
+
+void descansar(int *vida, int *vidamax)
+{
+	*vida += 30;
+	if(*vida >= *vidamax)
+	{
+		*vida = *vidamax;
+		printf("Voce recuperou vida!\n");
+	}else
+	{
+		printf("Voce recuperou vida!\n");
+	}
+}
+
+void chefefinal(int *vida, int *vidamax, int *ataque, int *defesa, int *experiencia, int *ouro, int *nivel)
+{
+	int vidainimigo = 300;
+	int ataqueinimigo = 25;
+	int venceu = 0;
+	
+	if(*nivel <= 5)
+	{
+		printf("Voce ainda nao esta preparado!\n");
+	}else if(*nivel >= 5)
+	{
+		printf("Voce decide enfrentar o dragao!\n");
+		combate(vida, *ataque, *defesa, &vidainimigo, ataqueinimigo, experiencia, ouro, &venceu);
+		if(venceu == 1 && *vida >= 0)
+		{
+			*ouro += 1000000;
+			*experiencia += 1000000;
+			printf("+1000000 de ouro!\n");
+			printf("+1000000 de XP!\n");
+			printf("PARABENS VOCE GANHOU O JOGO!\n");
+			system("pause");
+			exit(0);
+		}
+	}
 }
