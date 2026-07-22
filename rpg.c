@@ -166,6 +166,9 @@ void menu()
 
 void criarpersonagem(char nome[], int *vida, int *vidamax, int *ataque, int *defesa, int *nivel, int *experiencia, int *ouro, int *criado)
 {
+	
+	FILE *pont_arq;
+	
 	if(*criado == 0)
 	{
 		printf("\nescolha um nome para o personagem\n");
@@ -183,6 +186,32 @@ void criarpersonagem(char nome[], int *vida, int *vidamax, int *ataque, int *def
 	{
 		printf("Voce ja tem um personagem criado!\n");
 	}
+	
+	pont_arq = fopen("save.txt", "a");
+	
+	if(pont_arq == NULL)
+	{
+		printf("Algo deu errado!\n");
+	}else
+	{
+		printf("Salvo com sucesso!\n");
+		fprintf(pont_arq "%s\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n", nome, vida, vidamax, ataque, defesa, nivel, experiencia, ouro, criado);
+	}
+	
+	fclose(pont_arq);
+	
+	pont_arq = fopen("save.txt", "r");
+	
+	if(pont_arq == NULL)
+	{
+		printf("Algo deu errado!\n");
+	}else
+	{
+		printf("Salvo com sucesso!\n");
+		fscanf(pont_arq "%s %d %d %d %d %d %d %d %d", nome, &vida, &vidamax, &ataque, &defesa, &nivel, &experiencia, &ouro, &criado);
+	}
+	
+	fclose(pont_arq);
 }
 
 void mostrarstatus(char nomeex[], int vida, int vidamax, int ataque, int defesa, int nivel, int experiencia, int ouro)
