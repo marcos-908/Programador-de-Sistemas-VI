@@ -11,12 +11,13 @@ struct Aluno
 int main()
 {
 	struct Aluno a1;
-	strcpy(a1.nome, "joao");
+	scanf("%s", a1.nome);
 	scanf("%d", &a1.idade);
-	scanf("%lf", &a1.nota);
+	scanf("%f", &a1.nota);
+	
 	printf("Nome %s\n", a1.nome);
-	printf("Idade %d\n", &a1.idade);
-	printf("Nota %2f\n", &a1.nota);
+	printf("Idade %d\n", a1.idade);
+	printf("Nota %.2f\n", a1.nota);
 	
 	return(0);
 }
