@@ -190,3 +190,5 @@ insert into espaco (identificacao, id_certificado, codigo_de_identificacao, capa
 insert into espaco (identificacao, id_certificado, codigo_de_identificacao, capacidade_maxima, nome) values ('ESP-08', 8, 8, 50, 'Sala Multiuso 102');
 insert into espaco (identificacao, id_certificado, codigo_de_identificacao, capacidade_maxima, nome) values ('ESP-09', 9, 9, 500, 'Centro de Eventos');
 insert into espaco (identificacao, id_certificado, codigo_de_identificacao, capacidade_maxima, nome) values ('ESP-10', 10, 10, 25, 'Sala de Treinamento C');
+
+select capacidade_maxima from espaco order by capacidade_maxima asc;
