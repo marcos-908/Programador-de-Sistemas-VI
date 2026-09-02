@@ -49,3 +49,21 @@ select * from alunos order by cidade asc, nome asc;
 select * from alunos limit 5;
 select * from alunos order by nota desc limit 3;
 select * from alunos order by nota desc limit 3 offset 3;
+select count(*) nome from alunos;
+select count(*) from alunos where curso = 'Programação';
+select avg(nota) from alunos;
+select max(nota) from alunos;
+select min(nota) from alunos;
+select sum(nota) from alunos;
+select min(nota) as menor,
+max(nota) as maior,
+avg(nota) as media
+from alunos;
+select cidade, count(*) as quantidade from alunos group by cidade;
+select curso, count(*) as quantidade from alunos group by curso;
+select cidade, avg(nota) as media from alunos group by cidade;
+select curso, max(nota) as nota from alunos group by curso;
+select cidade, count(*) as quantidade from alunos group by cidade having count(*) >= 3;
+select curso, count(*) as quantidade from alunos group by curso having count(*) > 3;
+select curso, avg(nota) as media from alunos group by curso having avg(nota) > 7;
+select cidade, count(*) as alunos, avg(nota) as media from alunos group by cidade having count(*) >= 3 and avg(nota) > 7 order by avg(nota) desc;
