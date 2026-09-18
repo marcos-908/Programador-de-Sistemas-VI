@@ -48,10 +48,29 @@ INSERT INTO alunos_antigos (nome, cidade) VALUES
 ('Ana Silva', 'Curitiba'),
 ('Carlos Souza', 'Curitiba');
 
-select nome from alunos;
+select * from alunos;
 select nome, cidade from alunos;
-select nome, cidade from alunos where cidade = 'Curitiba';
-select nome, idade from alunos where idade >= 20;
-select a.nome, c.nome from alunos as a inner join cursos as c on c.id = a.curso_id;
-select a.nome, a.idade, c.nome from alunos as a inner join cursos as c on c.id = a.curso_id;
-select a.nome, a.cidade, c.nome, c.carga_horaria from alunos as a inner join cursos as c on c.id = a.curso_id;
+select * from alunos where cidade = 'Curitiba';
+select * from alunos where idade >= 20;
+select alunos.nome, cursos.nome from alunos inner join cursos on alunos.curso_id = cursos.id;
+select alunos.nome, alunos.idade, cursos.nome from alunos inner join cursos on alunos.curso_id = cursos.id;
+select alunos.nome, alunos.cidade, cursos.nome, cursos.carga_horaria from alunos inner join cursos on alunos.curso_id = cursos.id;
+select a.nome, a.cidade, c.nome, c.carga_horaria from alunos as a inner join cursos as c on a.curso_id = c.id;
+select a.nome, a.cidade, c.nome from alunos as a inner join cursos as c on a.curso_id = c.id where c.nome = 'Programação de Sistemas';
+select a.nome, c.nome, c.carga_horaria from alunos as a inner join cursos as c on a.curso_id = c.id where carga_horaria > 900;
+select a.nome, c.nome from alunos as a left join cursos as c on a.curso_id = c.id;
+select a.nome, a.cidade, c.nome from alunos as a left join cursos as c on a.curso_id = c.id;
+select a.nome, c.nome from alunos as a left join cursos as c on a.curso_id = c.id where c.id is null;
+select a.nome, a.cidade, c.nome from alunos as a left join cursos as c on a.curso_id = c.id where cidade = 'Curitiba';
+select a.nome, c.nome from alunos as a right join cursos as c on a.curso_id = c.id;
+select a.nome, c.nome, c.carga_horaria from alunos as a right join cursos as c on a.curso_id = c.id;
+select nome from alunos union select nome from alunos_antigos;
+select nome, cidade from alunos union select nome, cidade from alunos_antigos;
+select nome from alunos union select nome from alunos_antigos order by nome asc;
+select nome from alunos union all select nome from alunos_antigos;
+select a.nome, a.cidade, c.nome from alunos as a inner join cursos as c on a.curso_id = c.id where cidade = 'Curitiba';
+select a.nome, a.cidade from alunos as a left join cursos as c on a.curso_id = c.id where c.id is null;
+select c.nome, c.carga_horaria from alunos as a right join cursos as c on a.curso_id = c.id where curso_id is null;
+select nome from alunos union select nome from alunos_antigos;
+select nome from alunos union all select nome from alunos_antigos;
+select a.nome, a.cidade, c.nome, c.carga_horaria from alunos as a left join cursos as c on a.curso_id = c.id order by a.nome asc;
