@@ -1,5 +1,7 @@
 #include<stdio.h>
 #include<windows.h>
+#include<stdlib.h>
+#include<libpq-fe.h>
 
 #define MAX_SIZE_DESCRICAO  25
 #define MAX_SIZE_V_STRUCT 1000
@@ -26,6 +28,18 @@ int main()
 	BarraDeCarregamento();
 	/*INICIALIZO MEU VETOR DE ESTRUTURA TODO NULO*/
 	NullStruct(deposito);
+	const char *conninfo = "host=localhost port=5432 dbname=Estoque user=postgres password=admin";
+	
+	PGconn *conn = PQconnectdb(conninfo);
+	
+	if (PQstatus(conn) != CONNECTION_OK)
+	{
+		fprintf(stderr, "Erro de conexao: %s\n", PQerrorMessage(conn));
+		PQfinish(conn);
+		return(1);
+	}
+	
+	printf("Conectado ao banco com sucesso!\n");
 	
 	do
 	{
@@ -36,12 +50,12 @@ int main()
 			/*CADASTRO DE PRODUTOS NO ARQUIVO*/
 			case 1:
 				system("cls");
-				CadastroDeProdutos(deposito);
+				CadastroDeProdutos(deposito, conn);
 			break;
 			/*LISTAR PRODUTOS DO ARQUIVO*/
 			case 2:
 				system("cls");
-				ListarProdutos(deposito);
+				ListarProdutos(deposito, conn);
 			break;
 			/*BUSCAR PRODUTOS DO ARQUIVO POR CODIGO*/
 			case 3:
@@ -51,7 +65,7 @@ int main()
 			/*ALTERAR QUANTIDADE DE PRODUTOS DO ESTOQUE POR CODIGO*/
 			case 4:
 				system("cls");
-				AlterarQuantidadeProdutos(deposito);
+				AlterarQuantidadeProdutos(deposito, conn);
 			break;
 			/*CALCULAR VALOR TOTAL DE PRODUTOS NO ESTOQUE*/
 			case 5:
@@ -66,7 +80,7 @@ int main()
 			/*APAGAR MEU BANCO DE DADOS */
 			case 7:
 				system("cls");
-				ApagarOsDadosDoSistema(deposito);
+				ApagarOsDadosDoSistema(deposito, conn);
 				system("cls");
 				printf("\nEXCLUSAO CONCLUIDA\n");
 			break;
@@ -83,6 +97,8 @@ int main()
 		}
 		
 	}while(escolha != 8);
+	
+	PQfinish(conn);
 	
 	return(0);
 }

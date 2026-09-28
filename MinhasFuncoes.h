@@ -7,10 +7,10 @@ void Ordem();
 void Som(const wchar_t *arquivo, int tempo);
 void ZerarDescricao(char * descricao);
 void NullStruct(estq * pnt_deposito);
-void CadastroDeProdutos(estq * pnt_deposito);
-void ListarProdutos(estq * pnt_deposito);
+void CadastroDeProdutos(estq * pnt_deposito, PGconn *conn);
+void ListarProdutos(estq * pnt_deposito, PGconn *conn);
 void BuscarProdutos(estq * pnt_deposito);
-void AlterarQuantidadeProdutos(estq  * pnt_deposito);
+void AlterarQuantidadeProdutos(estq  * pnt_deposito, PGconn *conn);
 void CalcularValorTotalEstoque(estq  * pnt_deposito);
 void Imprimir(estq * pnt_deposito, int tam);
 void BubbleSortCodigo(estq * pnt_deposito, int opcao, int tamanho);
@@ -18,7 +18,7 @@ void BubbleSortQuantidade(estq * pnt_deposito, int opcao, int tamanho);
 void BubbleSortPreco(estq * pnt_deposito, int opcao, int tamanho);
 int CompararPalavras(char *palavra1, char *palavra2);
 void FiltrarOrdenar(estq  * pnt_deposito);
-void ApagarOsDadosDoSistema(estq  * pnt_deposito);
+void ApagarOsDadosDoSistema(estq  * pnt_deposito, PGconn *conn);
 void BarraDeCarregamento();
 
 void Som(const wchar_t *arquivo, int tempo) 
@@ -157,10 +157,14 @@ void NullStruct(estq * pnt_deposito)
 		}
 }
 
-void CadastroDeProdutos(estq  * pnt_deposito)
+void CadastroDeProdutos(estq  * pnt_deposito, PGconn *conn)
 {
 	int quantidade = 0;
 	FILE * arquivo;
+	char nome[50];
+    int numero;
+    double preco;
+    char sql[300];
 	
 	arquivo = fopen("arquivo.txt","a");
 	
@@ -181,14 +185,29 @@ void CadastroDeProdutos(estq  * pnt_deposito)
 			for(int i = 0; i < quantidade; i++)
 			{
 				printf("Informe o NOME do produto: ");
-				scanf(" %[^\n]", pnt_deposito[i].produto);
+				scanf("%49s", nome);
 				printf("Informe o CODIGO do produto: ");
 				scanf("%d", &pnt_deposito[i].codigo);
 				printf("Informe a QUANTIDADE do produto: ");
-				scanf("%d", &pnt_deposito[i].quantidade);
+				scanf("%d", &numero);
 				printf("Informe o PRECO UNITARIO do produto: ");
-				scanf("%lf", &pnt_deposito[i].preco_unitario);
+				scanf("%lf", &preco);
 				printf("\n");
+				
+				sprintf(sql, "INSERT INTO estoque (nome, quantidade, preco) VALUES ('%s', %d, %.2lf);", nome, numero, preco);
+				
+				PGresult *res = PQexec(conn, sql);
+				
+				if (PQresultStatus(res) != PGRES_COMMAND_OK)
+				{
+					fprintf(stderr, "Erro no INSERT: %s\n", PQerrorMessage(conn));
+					PQclear(res);
+					return;
+				}
+				
+				printf("Produto cadastrado com sucesso!\n");
+				
+				PQclear(res);
 				
 				fprintf(arquivo,"%s\n%d\n%d\n%.2lf\n",pnt_deposito[i].produto,pnt_deposito[i].codigo,pnt_deposito[i].quantidade,pnt_deposito[i].preco_unitario);
 				
@@ -207,7 +226,7 @@ void CadastroDeProdutos(estq  * pnt_deposito)
 	
 }
 
-void ListarProdutos(estq  * pnt_deposito)
+void ListarProdutos(estq  * pnt_deposito, PGconn *conn)
 {
 	FILE * arquivo;
 	int i = 0;
@@ -280,13 +299,15 @@ void BuscarProdutos(estq  * pnt_deposito)
 	
 }
 
-void AlterarQuantidadeProdutos(estq  * pnt_deposito)
+void AlterarQuantidadeProdutos(estq  * pnt_deposito, PGconn *conn)
 {
 	FILE * arquivo;
 	int i = 0;
 	int cod = 0;
 	int quantidade = 0;
 	arquivo = fopen("arquivo.txt","r");
+	int numero;
+	char sql[300];
 	
 	printf("Informe o CODIGO do produto que deseja modificar: ");
 	scanf("%d",&cod);
@@ -310,8 +331,23 @@ void AlterarQuantidadeProdutos(estq  * pnt_deposito)
 				}
 				printf("%s╚═════╩══════════════════════════╩════════════╩════════════════╝%s\n\n",FG_VERDE,RESET);
 				printf("informe a NOVA quantidade\n");
-				scanf("%d",&quantidade);
+				scanf("%d", &numero);
 				pnt_deposito[i].quantidade = quantidade;
+				
+				sprintf(sql, "UPDATE estoque SET quantidade = %d WHERE id = %d;", quantidade, cod);
+				
+				PGresult *res = PQexec(conn, sql);
+				
+				if (PQresultStatus(res) != PGRES_COMMAND_OK)
+				{
+					fprintf(stderr, "Erro no UPDATE: %s\n", PQerrorMessage(conn));
+					PQclear(res);
+					return;
+				}
+				
+				printf("Produto atualizado com sucesso!\n");
+				
+				
 			}
 			i++;
 		}
@@ -698,8 +734,27 @@ void FiltrarOrdenar(estq  * pnt_deposito)
 	
 }
 
-void ApagarOsDadosDoSistema(estq  * pnt_deposito)
+void ApagarOsDadosDoSistema(estq  * pnt_deposito, PGconn *conn)
 {
+	int id;
+	char sql[300];
+	
+	printf("ID do produto:  ");
+	scanf("%d", &id);
+	
+	sprintf(sql, "DELETE FROM estoque WHERE id = %d;", id);
+	
+	PGresult *res = PQexec(conn, sql);
+	
+	if (PQresultStatus(res) != PGRES_COMMAND_OK)
+    {
+        fprintf(stderr, "Erro no DELETE: %s\n", PQerrorMessage(conn));
+        PQclear(res);
+        return;
+    }
+	
+	printf("Produto excluido com sucesso!\n");
+	
 	FILE * arquivo;
 	arquivo = fopen("arquivo.txt","w");
 	if(arquivo != NULL)

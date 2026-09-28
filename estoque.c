@@ -31,20 +31,36 @@ int main()
 		switch(escolha)
 		{
 			case 1:
+			system("cls");
 			select(conn);
 			break;
 			
 			case 2:
+			system("cls");
+			select(conn);
 			update(conn);
 			break;
 			
 			case 3:
+			system("cls");
+			select(conn);
 			insert(conn);
 			break;
 			
 			case 4:
+			system("cls");
+			select(conn);
 			delete(conn);
 			break;
+			
+			case 0:
+			system("cls");
+			printf("Sistema Finalizado\n");
+			break;
+			
+			default:
+			system("cls");
+			printf("\nATENCAO: Escolha uma das opcoes disponiveis no menu!\n\n");
 		}
 	}while(escolha != 0);
 	
@@ -109,7 +125,7 @@ void update(PGconn *conn)
     double preco;
     char sql[300];
 	
-	printf("ID do produto: ");
+	printf("\nID do produto: ");
     scanf("%d", &id);
 	
 	printf("Novo produto: ");
@@ -144,7 +160,7 @@ void insert(PGconn *conn)
     double preco;
     char sql[300];
 	
-	printf("Nome do produto: ");
+	printf("\nNome do produto: ");
     scanf("%49s", nome);
 
     printf("Quantidade: ");
@@ -177,7 +193,7 @@ void delete(PGconn *conn)
 	printf("ID do produto:  ");
 	scanf("%d", &id);
 	
-	sprintf(sql, "DELETE FROM estoque WHERE id = %d;", id);
+	sprintf(sql, "\nDELETE FROM estoque WHERE id = %d;", id);
 	
 	PGresult *res = PQexec(conn, sql);
 	
