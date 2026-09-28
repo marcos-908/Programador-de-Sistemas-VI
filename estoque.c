@@ -12,7 +12,7 @@ int main()
 {
 	int escolha = 0;
 	
-	const char *conninfo = "host=localhost port=5432 dbname=Estoque user=postgres password=100912279";
+	const char *conninfo = "host=localhost port=5432 dbname=Estoque user=postgres password=admin";
 	
 	PGconn *conn = PQconnectdb(conninfo);
 	
@@ -104,7 +104,7 @@ void select(PGconn *conn)
 void update(PGconn *conn)
 {
 	int id;
-    char produto[50];
+    char nome[50];
     int quantidade;
     double preco;
     char sql[300];
@@ -113,7 +113,7 @@ void update(PGconn *conn)
     scanf("%d", &id);
 	
 	printf("Novo produto: ");
-    scanf("%49s", produto);
+    scanf("%49s", nome);
 	
 	printf("Nova quantidade: ");
     scanf("%d", &quantidade);
@@ -121,7 +121,7 @@ void update(PGconn *conn)
 	printf("Novo preco: ");
     scanf("%lf", &preco);
 	
-	sprintf(sql, "UPDATE estoque SET produto = '%s', quantidade = %d, preco_unitario = %.2lf WHERE id = %d;", produto, quantidade, preco, id);
+	sprintf(sql, "UPDATE estoque SET nome = '%s', quantidade = %d, preco = %.2lf WHERE id = %d;", nome, quantidade, preco, id);
 	
 	PGresult *res = PQexec(conn, sql);
 	
@@ -139,13 +139,13 @@ void update(PGconn *conn)
 
 void insert(PGconn *conn)
 {
-	char produto[50];
+	char nome[50];
     int quantidade;
     double preco;
     char sql[300];
 	
 	printf("Nome do produto: ");
-    scanf("%49s", produto);
+    scanf("%49s", nome);
 
     printf("Quantidade: ");
     scanf("%d", &quantidade);
@@ -153,7 +153,7 @@ void insert(PGconn *conn)
     printf("Preco: ");
     scanf("%lf", &preco);
 	
-	sprintf(sql, "INSERT INTO estoque (produto, quantidade, preco_unitario) VALUES ('%s', %d, %.2lf);", produto, quantidade, preco);
+	sprintf(sql, "INSERT INTO estoque (nome, quantidade, preco) VALUES ('%s', %d, %.2lf);", nome, quantidade, preco);
 	
 	PGresult *res = PQexec(conn, sql);
 	
